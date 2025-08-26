@@ -18,14 +18,13 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @RestController
 @RequestMapping("/items")
 @Slf4j
 public class ItemController {
     private final ItemService itemService;
+    private static final String USER_ID = "X-Sharer-User-Id";
 
     @Autowired
     public ItemController(ItemService itemService) {
@@ -33,7 +32,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") Long owner) {
+    public List<ItemDto> getAllItems(@RequestHeader(USER_ID) Long owner) {
         return itemService.getAllItems(owner);
     }
 
@@ -50,14 +49,14 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long ownerId,
+    public ItemDto addItem(@RequestHeader(USER_ID) Long ownerId,
                            @Valid @RequestBody Item item) {
         log.info("Начинается добавление предмета {}, владелец {}", item, ownerId);
         return itemService.addItem(ownerId, item);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long ownerId, @PathVariable Long itemId,
+    public ItemDto updateItem(@RequestHeader(USER_ID) Long ownerId, @PathVariable Long itemId,
                               @RequestBody Item item) {
         log.info("Начинается обновление предмета id={}", item.getId());
         return itemService.updateItem(ownerId, itemId, item);

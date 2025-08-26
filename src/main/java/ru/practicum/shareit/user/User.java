@@ -7,9 +7,7 @@ import lombok.Data;
 import ru.practicum.shareit.validation.CreateValidation;
 import ru.practicum.shareit.validation.UpdateValidation;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @Data
 @AllArgsConstructor
 public class User {

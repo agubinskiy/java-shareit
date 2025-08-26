@@ -16,9 +16,6 @@ import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.validation.CreateValidation;
 import ru.practicum.shareit.validation.UpdateValidation;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping(path = "/users")
 @Slf4j
