@@ -81,10 +81,6 @@ public class ItemServiceImpl implements ItemService {
         log.debug("Выполняется запрос предмета с id={}", id);
         Item item = itemStorage.findById(id).orElseThrow(
                 () -> new NotFoundException("Предмет с id " + id + " не найден"));
-        ItemBookingInfo bookingInfo = bookingStorage.findItemBookingInfo(Set.of(id), LocalDateTime.now())
-                .stream()
-                .findFirst()
-                .orElse(null);
         List<Comment> comments = commentStorage.findByItemIdIn(Set.of(id));
 
         return ItemMapper.toItemWithBookingDto(item, null, comments);
