@@ -39,12 +39,14 @@ public class UserController {
         return userService.addUser(user);
     }
 
+
     @PatchMapping("/{userId}")
     public UserDto updateUser(@PathVariable Long userId,
                               @Validated(UpdateValidation.class) @RequestBody User user) {
         log.info("Начинается обновление пользователя id={}", userId);
         return userService.updateUser(userId, user);
     }
+
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable Long userId) {

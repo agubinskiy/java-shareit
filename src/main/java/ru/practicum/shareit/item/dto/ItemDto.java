@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-
+/**
+ * Стандартный класс dto, используется в методе GET /items/search
+ */
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -14,5 +16,5 @@ public class ItemDto {
     private String description;
     private Boolean available;
     private Long owner;
-    private Long request;
+    //private Long request;
 }
