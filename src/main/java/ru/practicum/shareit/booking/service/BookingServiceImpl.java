@@ -42,10 +42,10 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto addBooking(long bookerId, NewBookingRequest request) {
         log.debug("Начинается добавление бронирования {}", request);
         Item item = itemStorage.findById(request.getItemId()).orElseThrow(
-                () -> new NotFoundException("Нет предмета с указанным идентификатором")
+                () -> new NotFoundException("Нет предмета с идентификатором " + request.getItemId())
         );
         User booker = userStorage.findById(bookerId).orElseThrow(
-                () -> new NotFoundException("Нет пользователя с указанным идентификатором")
+                () -> new NotFoundException("Нет пользователя с идентификатором " + bookerId)
         );
         if (!request.getStart().isBefore(request.getEnd())) {
             throw new ValidationException("end", "Дата окончания должна быть после даты начала");
@@ -68,7 +68,8 @@ public class BookingServiceImpl implements BookingService {
         log.debug("Начинается обновление статуса бронирования {}", bookingId);
         Booking booking = bookingStorage.findById(bookingId).orElseThrow();
         if (booking.getItem().getOwnerId() != ownerId) {
-            throw new ForbiddenException("Недостаточно прав");
+            throw new ForbiddenException("Пользователь " + ownerId +
+                    " не имеет прав на обновление статуса бронирования " + bookingId);
         }
         if (approved) {
             booking.setStatus(BookingStatus.APPROVED);
@@ -84,7 +85,8 @@ public class BookingServiceImpl implements BookingService {
         log.debug("Запрашивается информация по бронированию id={}", bookingId);
         Booking booking = bookingStorage.findById(bookingId).orElseThrow();
         if ((booking.getItem().getOwnerId() != userId) && (booking.getBooker().getId() != userId)) {
-            throw new ForbiddenException("Недостаточно прав");
+            throw new ForbiddenException("Пользователь " + userId +
+                    " не имеет прав на запрос информации о бронировании " + bookingId);
         }
         return BookingMapper.mapBookingToDto(booking);
     }
@@ -140,7 +142,7 @@ public class BookingServiceImpl implements BookingService {
 
     private void checkUser(long userId) {
         if (userStorage.findById(userId).isEmpty()) {
-            throw new NotFoundException("Нет пользователя с данным идентификатором");
+            throw new NotFoundException("Нет пользователя с идентификатором " + userId);
         }
     }
 }

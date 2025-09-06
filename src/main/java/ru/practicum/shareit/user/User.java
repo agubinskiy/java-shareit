@@ -5,17 +5,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.validation.CreateValidation;
-import ru.practicum.shareit.validation.UpdateValidation;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Objects;
 
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 @Entity
 public class User {
@@ -23,12 +26,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Имя не может быть пустым", groups = CreateValidation.class)
-    @Size(max = 255)
     private String name;
 
-    @Email(message = "Некорректный формат почты", groups = {CreateValidation.class, UpdateValidation.class})
-    @NotBlank(message = "Почта не может быть пустой", groups = CreateValidation.class)
-    @Size(max = 512)
     private String email;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

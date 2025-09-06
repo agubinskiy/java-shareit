@@ -16,7 +16,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.dto.NewCommentRequest;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.NewItemRequest;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(USER_ID) Long ownerId,
-                           @Valid @RequestBody Item item) {
+                           @Valid @RequestBody NewItemRequest item) {
         log.info("Начинается добавление предмета {}, владелец {}", item, ownerId);
         return itemService.addItem(ownerId, item);
     }
@@ -61,7 +61,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader(USER_ID) Long ownerId, @PathVariable Long itemId,
-                              @RequestBody Item item) {
+                              @RequestBody NewItemRequest item) {
         log.info("Начинается обновление предмета id={}", itemId);
         return itemService.updateItem(ownerId, itemId, item);
     }

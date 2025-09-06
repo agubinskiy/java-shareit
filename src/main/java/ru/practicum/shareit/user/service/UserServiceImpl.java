@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.errors.exceptions.DuplicateDataException;
 import ru.practicum.shareit.errors.exceptions.NotFoundException;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.storage.UserStorage;
@@ -24,16 +25,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto addUser(User user) {
-        log.debug("Начинается добавление пользователя {}", user);
-        emailCheckDuplicate(user);
+    public UserDto addUser(NewUserRequest request) {
+        log.debug("Начинается добавление пользователя {}", request);
+        emailCheckDuplicate(request);
+        User user = UserMapper.mapFromNewUserRequest(request);
         userStorage.save(user);
         return UserMapper.toUserDto(user);
     }
 
     @Override
     @Transactional
-    public UserDto updateUser(long id, User user) {
+    public UserDto updateUser(long id, NewUserRequest user) {
         log.debug("Начинается обновление пользователя Id={}, {}", id, user);
         User oldUser = userStorage.findById(id).orElseThrow(
                 () -> new NotFoundException("Пользователь с id=" + id + " не найден")
@@ -65,9 +67,9 @@ public class UserServiceImpl implements UserService {
         userStorage.deleteById(id);
     }
 
-    private void emailCheckDuplicate(User user) {
+    private void emailCheckDuplicate(NewUserRequest user) {
         if (userStorage.existsByEmail(user.getEmail())) {
-            throw new DuplicateDataException("Эта почта уже используется");
+            throw new DuplicateDataException("Почта " + user.getEmail() + "уже используется");
         }
     }
 }

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.mapper;
 
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserElementDto;
 
@@ -15,5 +16,13 @@ public class UserMapper {
 
     public static UserElementDto mapToUserElementDto(User user) {
         return new UserElementDto(user.getId(), user.getName(), user.getEmail());
+    }
+
+    public static User mapFromNewUserRequest(NewUserRequest request) {
+        return new User(
+                null,
+                request.getName(),
+                request.getEmail()
+        );
     }
 }

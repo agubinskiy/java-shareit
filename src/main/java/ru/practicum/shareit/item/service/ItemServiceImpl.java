@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.dto.NewCommentRequest;
+import ru.practicum.shareit.item.dto.NewItemRequest;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
@@ -99,10 +100,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto addItem(long ownerId, Item item) {
-        log.debug("Начинается добавление предмета {}", item);
+    public ItemDto addItem(long ownerId, NewItemRequest request) {
+        log.debug("Начинается добавление предмета {}", request);
         checkUser(ownerId);
-        item.setOwnerId(ownerId);
+        Item item = ItemMapper.mapFromNewItemRequest(request, ownerId);
         itemStorage.save(item);
         return ItemMapper.toItemDto(item);
     }
@@ -110,10 +111,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto updateItem(long ownerId, long itemId, Item item) {
-        log.debug("Начинается обновление предмета id={}", item.getId());
+    public ItemDto updateItem(long ownerId, long itemId, NewItemRequest item) {
+        log.debug("Начинается обновление предмета id={}", itemId);
         if (!itemStorage.findById(itemId).orElseThrow().getOwnerId().equals(ownerId)) {
-            throw new ForbiddenException("Недостаточно прав");
+            throw new ForbiddenException("У пользователя " + ownerId + " нет прав на обновление предмета " + itemId);
         }
         Item oldItem = itemStorage.findById(itemId).orElseThrow(
                 () -> new NotFoundException("Предмет с id=" + itemId + " не найден")
@@ -142,10 +143,10 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException("", "Не выполнены условия для возможности оставить комментарий");
         }
         Item item = itemStorage.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмета с таким идентификатором не найдено")
+                () -> new NotFoundException("Предмет с идентификатором " + itemId + " не найден")
         );
         User author = userStorage.findById(userId).orElseThrow(
-                () -> new NotFoundException("Нет пользователя с указанным идентификатором")
+                () -> new NotFoundException("Пользователь с идентификатором " + userId + " не найден")
         );
         Comment comment = new Comment();
         comment.setText(request.getText());

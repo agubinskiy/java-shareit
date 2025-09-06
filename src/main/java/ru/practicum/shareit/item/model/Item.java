@@ -6,36 +6,47 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Objects;
 
 
-@Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "items")
 @Entity
+@Getter
+@Setter
+@ToString
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Название предмета не может быть пустым")
-    @Size(max = 255)
     private String name;
 
-    @NotBlank(message = "Описание не может быть пустым")
-    @Size(max = 1024)
     private String description;
 
-    @NotNull(message = "Должна быть проставлена доступность")
     private Boolean available;
 
     @Column(name = "owner_id")
     private Long ownerId;
 
-    //TO DO
-    //private ItemRequest request;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item item)) return false;
+        return id != null && Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    //TO DO private ItemRequest request;
 }

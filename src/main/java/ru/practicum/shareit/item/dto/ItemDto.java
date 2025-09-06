@@ -16,5 +16,5 @@ public class ItemDto {
     private String description;
     private Boolean available;
     private Long owner;
-    //private Long request;
+    //TO DO private Long request;
 }

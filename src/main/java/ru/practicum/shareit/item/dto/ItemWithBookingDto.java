@@ -19,6 +19,7 @@ public class ItemWithBookingDto {
     private String description;
     private Boolean available;
     private Long owner;
+    //TO DO private Long request;
     private LocalDateTime lastBooking;
     private LocalDateTime nextBooking;
     private List<Comment> comments;
