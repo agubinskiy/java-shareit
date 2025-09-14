@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.ItemWithBookingDto;
+import ru.practicum.shareit.item.dto.NewCommentRequest;
+import ru.practicum.shareit.item.dto.NewItemRequest;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -32,12 +35,12 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItems(@RequestHeader(USER_ID) Long owner) {
+    public List<ItemWithBookingDto> getAllItems(@RequestHeader(USER_ID) Long owner) {
         return itemService.getAllItems(owner);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable Long itemId) {
+    public ItemWithBookingDto getItem(@PathVariable Long itemId) {
         log.info("Выполняется запрос предмета с id={}", itemId);
         return itemService.getItemById(itemId);
     }
@@ -50,15 +53,23 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(USER_ID) Long ownerId,
-                           @Valid @RequestBody Item item) {
+                           @Valid @RequestBody NewItemRequest item) {
         log.info("Начинается добавление предмета {}, владелец {}", item, ownerId);
         return itemService.addItem(ownerId, item);
     }
 
+
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader(USER_ID) Long ownerId, @PathVariable Long itemId,
-                              @RequestBody Item item) {
-        log.info("Начинается обновление предмета id={}", item.getId());
+                              @RequestBody NewItemRequest item) {
+        log.info("Начинается обновление предмета id={}", itemId);
         return itemService.updateItem(ownerId, itemId, item);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(USER_ID) Long userId, @PathVariable Long itemId,
+                                 @Valid @RequestBody NewCommentRequest request) {
+        log.info("Начинается добавление комментария {} предмету {} пользователем {}", request, itemId, userId);
+        return itemService.addComment(userId, itemId, request);
     }
 }

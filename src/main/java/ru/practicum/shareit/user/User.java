@@ -1,22 +1,44 @@
 package ru.practicum.shareit.user;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import ru.practicum.shareit.validation.CreateValidation;
-import ru.practicum.shareit.validation.UpdateValidation;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Objects;
 
 
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
+@Entity
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Имя не может быть пустым", groups = CreateValidation.class)
     private String name;
 
-    @Email(message = "Некорректный формат почты", groups = {CreateValidation.class, UpdateValidation.class})
-    @NotBlank(message = "Почта не может быть пустой", groups = CreateValidation.class)
     private String email;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

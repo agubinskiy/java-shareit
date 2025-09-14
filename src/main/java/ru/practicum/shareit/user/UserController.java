@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.validation.CreateValidation;
@@ -34,17 +35,19 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto addUser(@Validated(CreateValidation.class) @RequestBody User user) {
+    public UserDto addUser(@Validated(CreateValidation.class) @RequestBody NewUserRequest user) {
         log.info("Начинается добавление пользователя {}", user);
         return userService.addUser(user);
     }
 
+
     @PatchMapping("/{userId}")
     public UserDto updateUser(@PathVariable Long userId,
-                              @Validated(UpdateValidation.class) @RequestBody User user) {
+                              @Validated(UpdateValidation.class) @RequestBody NewUserRequest user) {
         log.info("Начинается обновление пользователя id={}", userId);
         return userService.updateUser(userId, user);
     }
+
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable Long userId) {

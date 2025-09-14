@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.errors.exceptions.DuplicateDataException;
 import ru.practicum.shareit.errors.exceptions.ForbiddenException;
 import ru.practicum.shareit.errors.exceptions.NotFoundException;
+import ru.practicum.shareit.errors.exceptions.ValidationException;
 
 @RestControllerAdvice
 @Slf4j
@@ -44,11 +45,17 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class,
+            HttpMessageNotReadableException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidation(final Exception e) {
         log.debug("Ошибка валидации. {}", e.getMessage());
-        if (e.getClass() == HttpMessageNotReadableException.class) {
+        if (e.getClass() == ValidationException.class) {
+            return new ErrorResponse(
+                    "Некорректное значение параметра " + ((ValidationException) e).getParameter(),
+                    ((ValidationException) e).getReason()
+            );
+        } else if (e.getClass() == HttpMessageNotReadableException.class) {
             return new ErrorResponse("Некорректный запрос", "Тело запроса отсутствует");
         } else {
             return new ErrorResponse(
