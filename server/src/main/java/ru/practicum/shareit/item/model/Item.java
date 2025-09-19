@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -38,16 +36,4 @@ public class Item {
 
     @Column(name = "request_id")
     private Long requestId;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Item item)) return false;
-        return id != null && Objects.equals(id, item.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
