@@ -142,7 +142,7 @@ public class ItemServiceImpl implements ItemService {
         //Тут костыль с plusHours(3). Проблема с часовым поясом, но все перепробовал и не получается победить
         //Где именно ошибка не могу понять
         if (bookingStorage.findByBookerIdAndItemIdAndStatusAndEndBeforeOrderByStartDesc(userId, itemId,
-                BookingStatus.APPROVED, LocalDateTime.now().plusHours(3)).isEmpty()) {
+                BookingStatus.APPROVED, LocalDateTime.now()).isEmpty()) {
             throw new ValidationException("", "Не выполнены условия для возможности оставить комментарий");
         }
         Item item = itemStorage.findById(itemId).orElseThrow(
